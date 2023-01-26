@@ -43,8 +43,8 @@ class FindDevices extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            ipFrom: this.props.appConfig.getAppConfig('ip_scan_from') || "192.168.10.1",
-            ipTo: this.props.appConfig.getAppConfig('ip_scan_to') || "192.168.10.254",
+            ipFrom: this.props.appConfig.getAppConfig('ip_scan_from') || "192.168.1.1",
+            ipTo: this.props.appConfig.getAppConfig('ip_scan_to') || "192.168.1.254",
             totalAddresses: "",
             numIpsRequested: 0,
             numIpsCompleted: 0,
@@ -116,6 +116,9 @@ class FindDevices extends React.Component {
     onCommandResponse(args) {
         console.log(`${args.ip} : Present : ${args.success} Response : %O`, args.response);
         if (args.success && args.response.body.StatusNET) {
+            if ( args.response.body.StatusNET.Mac === "10:52:1C:D7:9E:2C") {
+               args.response.body.StatusNET.Mac = args.response.body.StatusNET.Hostname;
+            }
             this.props.deviceManager.addDiscoveredDevice(args.response.body.StatusNET.Mac, args.response.body);
             if (this.state.enableAuth) {
                 this.props.deviceManager.updateDevice(args.response.body.StatusNET.Mac,

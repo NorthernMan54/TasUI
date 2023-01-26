@@ -378,13 +378,17 @@ const TasmotaConfig_06070000 = {
     }],
     moduleResponseParser: function (moduleResponse) {
         if (typeof moduleResponse.Module === 'object') {
+            // console.log('OBFixed', moduleResponse);
             return moduleResponse
-        } else {
+        } else if (moduleResponse.Module) {
             let moduleParts = moduleResponse.Module.split(' ')
-            let parsed = { Module: {}}
+            let parsed = { Module: {} }
             parsed.Module[moduleParts[0]] = moduleParts[1].replace('(', '').replace(')', '')
+            // console.log('Fixed', parsed);
             return parsed
-        }
+        } else {
+            return { Module: { 0: 'Unknown'}};
+         }
     },
     gpioResponseFormatter: function (gpioResponse) {
         return Object.keys(gpioResponse).map((gpio, index) => {

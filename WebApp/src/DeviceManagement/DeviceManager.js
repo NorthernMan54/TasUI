@@ -66,6 +66,7 @@ class DeviceManager {
     }
 
     addDiscoveredDevice(macAddress, status0Response) {
+        console.log('addDiscoveredDevice', macAddress, status0Response);
         if (macAddress.length > 0) {
             if (this.discoveredDevices[macAddress]) {
                 this.discoveredDevices[macAddress].status0Response = status0Response

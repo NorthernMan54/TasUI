@@ -196,7 +196,7 @@ class TasmotaDevice extends Component {
                 this.deviceConnector.performCommandOnDevice('Status 0')
                 if (this.state.pendingCommand) {
                     this.deviceConnector.performCommandOnDevice(this.state.pendingCommand)
-                    this.setState( {pendingCommand: null})
+                    this.setState({ pendingCommand: null })
                 }
             }
 
@@ -214,7 +214,7 @@ class TasmotaDevice extends Component {
                 // console.log('GPIO Response : %O', response)
                 if (cmnd === 'GPIO') {
                     this.updateDeviceInfoState({ gpioResponse: response })
-                    this.setState({ currentModuleConfig: this.deviceConfig.gpioResponseFormatter(response)})
+                    this.setState({ currentModuleConfig: this.deviceConfig.gpioResponseFormatter(response) })
                 } else {
                     this.updateDeviceInfoState({ gpio255Response: response })
                 }
@@ -252,7 +252,10 @@ class TasmotaDevice extends Component {
                 this.updateDeviceInfoState({ status0Response: status0Clone })
             } else if (cmnd === 'Module') {
                 this.updateDeviceInfoState({ moduleResponse: response })
-                this.setState({ currentModuleType: Object.keys(response.Module)[0] })
+               // if (response.Module) {
+               //     console.log('What', response.Module, Object.keys(response.Module)[0]);
+                    this.setState({ currentModuleType: ( response.Module ? Object.keys(response.Module)[0] : 0 )})
+                //}
             } else if (cmnd === 'WifiPower') {
                 this.updateDeviceInfoState({ wifiPowerResponse: response })
             }
@@ -273,9 +276,12 @@ class TasmotaDevice extends Component {
 
     getModuleDisplayText() {
         if (this.state.deviceInfo.moduleResponse) {
+            //    console.log('What', this.state.deviceInfo.moduleResponse);
             let moduleParsed = this.deviceConfig.moduleResponseParser(this.state.deviceInfo.moduleResponse)
+            //    if (moduleParsed) {
             let moduleNum = Object.keys(moduleParsed.Module)[0];
             return `${moduleNum} (${moduleParsed.Module[moduleNum]})`
+            //    }
         } else {
             return ''
         }
@@ -850,7 +856,7 @@ class TasmotaDevice extends Component {
 
     resetTemplate(event) {
         event.stopPropagation()
-        this.setState({ currentTemplate: this.state.deviceInfo.templateResponse})
+        this.setState({ currentTemplate: this.state.deviceInfo.templateResponse })
     }
 
     isTemplateRenderable() {
@@ -870,17 +876,17 @@ class TasmotaDevice extends Component {
                 <ExpansionPanelDetails>
 
                     {
-                        this.isTemplateRenderable() ? this.renderTemplateResponse() : <CircularProgress /> 
+                        this.isTemplateRenderable() ? this.renderTemplateResponse() : <CircularProgress />
                     }
 
                 </ExpansionPanelDetails>
 
-                { this.isTemplateRenderable() ? (
+                {this.isTemplateRenderable() ? (
                     <ExpansionPanelActions>
                         <Button size="small" variant="contained" onClick={(event) => this.resetTemplate(event)}>Reset Template</Button>
                         <Button size="small" variant="contained" onClick={(event) => this.saveTemplate(event)}>Save Template</Button>
                     </ExpansionPanelActions>
-                    ) : ""
+                ) : ""
                 }
             </ExpansionPanel>
         )
@@ -896,7 +902,7 @@ class TasmotaDevice extends Component {
                         return (
                             <TableRow>
                                 <TableCell>{gpioObj.gpio}</TableCell>
-                        <TableCell>{gpioObj.gpioDeviceType} ( {gpioObj.gpioDeviceName} )</TableCell>
+                                <TableCell>{gpioObj.gpioDeviceType} ( {gpioObj.gpioDeviceName} )</TableCell>
                             </TableRow>
                         )
                     })}
@@ -908,7 +914,7 @@ class TasmotaDevice extends Component {
 
     onModuleTypeChanged(event) {
         event.stopPropagation()
-        this.setState( {currentModuleType: event.target.value})
+        this.setState({ currentModuleType: event.target.value })
     }
 
     onTemplateGPIOChanged(gpio, event) {
@@ -921,7 +927,7 @@ class TasmotaDevice extends Component {
             }
         }
 
-        this.setState( {currentModuleConfig: newConfig} )
+        this.setState({ currentModuleConfig: newConfig })
     }
 
     saveModuleConfiguration(event) {
@@ -943,7 +949,7 @@ class TasmotaDevice extends Component {
         let moduleType = Object.keys(this.state.deviceInfo.moduleResponse.Module)[0]
         let moduleConfig = this.deviceConfig.gpioResponseFormatter(this.state.deviceInfo.gpioResponse)
 
-        this.setState ( { currentModuleType: moduleType, currentModuleConfig: moduleConfig})
+        this.setState({ currentModuleType: moduleType, currentModuleConfig: moduleConfig })
     }
 
     renderGPIOConfiguration() {
@@ -1016,17 +1022,17 @@ class TasmotaDevice extends Component {
                 <ExpansionPanelDetails>
 
                     {
-                        this.isModuleConfigurationRenderable() ? this.renderGPIOConfiguration() : <CircularProgress /> 
+                        this.isModuleConfigurationRenderable() ? this.renderGPIOConfiguration() : <CircularProgress />
                     }
 
                 </ExpansionPanelDetails>
 
-                { this.isModuleConfigurationRenderable() ? (
+                {this.isModuleConfigurationRenderable() ? (
                     <ExpansionPanelActions>
                         <Button size="small" variant="contained" onClick={(event) => this.resetModuleConfiguration(event)}>Reset Module Configuration</Button>
                         <Button size="small" variant="contained" onClick={(event) => this.saveModuleConfiguration(event)}>Save Module Configuration</Button>
                     </ExpansionPanelActions>
-                    ) : ""
+                ) : ""
                 }
             </ExpansionPanel>
         )
