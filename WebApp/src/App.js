@@ -200,7 +200,7 @@ class App extends Component {
             <Typography variant="h6" noWrap className={classes.title}>
                 TasUI
             </Typography>
-            <Link variant="subtitle2" noWrap onClick={() => window.open(`https://github.com/IOTReboot/TasUI/tree/${process.env.REACT_APP_GIT_SHA}`)}>
+            <Link variant="subtitle2" noWrap onClick={() => window.open(`https://github.com/NorthernMan54/TasUI/tree/${process.env.REACT_APP_GIT_SHA}`)}>
               {Version.versionNumber}-{Version.versionName} {process.env.REACT_APP_GIT_BRANCH} ({process.env.REACT_APP_GIT_SHA})
             </Link>
           </div>
